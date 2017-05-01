@@ -28,7 +28,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,8 +52,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 import static android.R.attr.data;
@@ -68,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     ImageView mImageView;
     TextView tvLocation;
+    Spinner spinner;
 
     private String UPLOAD_URL ="PUT POST URL HERE";
 
@@ -96,6 +101,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         setSupportActionBar(toolbar);
 
         mImageView = (ImageView) findViewById(R.id.mImageView);
+
+
+        spinner = (Spinner) findViewById(R.id.spDept);
+        String[] years = {"Electricity","Water","Emergency","Other Services"};
+        ArrayAdapter<CharSequence> langAdapter = new ArrayAdapter<CharSequence>(getApplicationContext(), R.layout.spinner_text, years );
+        langAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown);
+        spinner.setAdapter(langAdapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
