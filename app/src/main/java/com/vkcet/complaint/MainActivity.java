@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -43,6 +44,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
@@ -61,7 +63,7 @@ import java.util.Map;
 import static android.R.attr.data;
 
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
 
     static int RESULT_TAKE_PICTURE = 1;
     String selectedImagePath;
@@ -73,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     ImageView mImageView;
     TextView tvLocation;
     Spinner spinner;
+    Button btnSubmit;
 
     private String UPLOAD_URL ="PUT POST URL HERE";
 
@@ -101,6 +104,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         setSupportActionBar(toolbar);
 
         mImageView = (ImageView) findViewById(R.id.mImageView);
+        btnSubmit = (Button) findViewById(R.id.btnSubmit);
+
+        btnSubmit.setOnClickListener(this);
 
 
         spinner = (Spinner) findViewById(R.id.spDept);
@@ -283,14 +289,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 String image = getStringImage(bitmap);
 
                 //Getting Image Name
-                String name = " ";
+                String loc = (String) tvLocation.getText();
+                String dept = (String) spinner.getSelectedItem();
 
                 //Creating parameters
                 Map<String,String> params = new Hashtable<String, String>();
 
                 //Adding parameters
-                params.put(KEY_IMAGE, image);
-                params.put(KEY_NAME, name);
+                params.put("image", image);
+                params.put("dept", dept);
+                params.put("loc", loc);
 
                 //returning parameters
                 return params;
@@ -425,5 +433,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view==btnSubmit){
+            uploadImage();
+        }
     }
 }
