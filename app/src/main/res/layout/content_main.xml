@@ -36,7 +36,7 @@
         </LinearLayout>
 
         <TextView
-            android:text="Tap to Update Location Information"
+            android:text="Location Info will automatically updated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tvLocation"

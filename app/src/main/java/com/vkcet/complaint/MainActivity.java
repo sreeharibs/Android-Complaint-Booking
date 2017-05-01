@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             @Override
             public void onClick(View view) {
                 cameraImageButton_onClick(getCurrentFocus());
-
+                checkLocation();
             }
         });
 
@@ -351,9 +351,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void startLocationUpdates() {
         // Create the location request
         mLocationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(UPDATE_INTERVAL)
-                .setFastestInterval(FASTEST_INTERVAL);
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         // Request location updates
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
