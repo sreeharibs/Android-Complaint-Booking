@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     static int RESULT_TAKE_PICTURE = 1;
     String selectedImagePath;
     Bitmap bitmap;
-    String imageName = "something.png";
+    String imageName = "something.jpg";
 
 
 
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     Spinner spinner;
     Button btnSubmit;
 
-    private String UPLOAD_URL ="PUT POST URL HERE";
+    private String UPLOAD_URL ="http://acms.22web.org/upload.php";
 
     private String KEY_IMAGE = "image";
     private String KEY_NAME = "name";
@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         btnSubmit.setOnClickListener(this);
 
 
+
         spinner = (Spinner) findViewById(R.id.spDept);
         String[] years = {"Electricity","Water","Emergency","Other Services"};
         ArrayAdapter<CharSequence> langAdapter = new ArrayAdapter<CharSequence>(getApplicationContext(), R.layout.spinner_text, years );
@@ -121,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             public void onClick(View view) {
                 cameraImageButton_onClick(getCurrentFocus());
                 checkLocation();
+
             }
         });
 
@@ -133,6 +135,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 .build();
 
         mLocationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+
+        Toast.makeText(this, Environment.getExternalStorageDirectory().toString(), Toast.LENGTH_SHORT).show();
 
 
     }
@@ -174,6 +178,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         dir = new File(path, imageName);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(dir));
         startActivityForResult(cameraIntent, RESULT_TAKE_PICTURE);
+
+       // Toast.makeText(this, Environment.getExternalStorageDirectory().toString(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -197,10 +203,47 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             saveImage(bitmap, imageName);
 
+            //File file = new File(Environment.getExternalStorageDirectory()+File.separator + "something.png");
+            //mImageView.setImageBitmap(decodeSampledBitmapFromFile(file.getAbsolutePath(), 500, 250));
+
         }
 
     }
 
+    public static Bitmap decodeSampledBitmapFromFile(String path,
+                                                     int reqWidth, int reqHeight) { // BEST QUALITY MATCH
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+
+        // Calculate inSampleSize
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
+        int inSampleSize = 1;
+
+        if (height > reqHeight) {
+            inSampleSize = Math.round((float)height / (float)reqHeight);
+        }
+
+        int expectedWidth = width / inSampleSize;
+
+        if (expectedWidth > reqWidth) {
+            //if(Math.round((float)width / (float)reqWidth) > inSampleSize) // If bigger SampSize..
+            inSampleSize = Math.round((float)width / (float)reqWidth);
+        }
+
+
+        options.inSampleSize = inSampleSize;
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+
+        return BitmapFactory.decodeFile(path, options);
+    }
 
 
     private void saveImage(Bitmap bitmap, String name) {
@@ -214,6 +257,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         path = path + name;
         dir = new File(path);
+
+        Toast.makeText(this, path, Toast.LENGTH_SHORT).show();
+        Log.d("Storage",path);
 
         try {
             dir.createNewFile();
@@ -285,20 +331,34 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 }){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
+
+                String photoPath = Environment.getExternalStorageDirectory()+File.separator + "something.jpg";
+                //mImageView.setImageBitmap(decodeSampledBitmapFromFile(file.getAbsolutePath(), 500, 250));
                 //Converting Bitmap to String
+
+              /*  BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                Bitmap bitmap = BitmapFactory.decodeFile(photoPath, options);*/
+
                 String image = getStringImage(bitmap);
 
                 //Getting Image Name
                 String loc = (String) tvLocation.getText();
-                String dept = (String) spinner.getSelectedItem();
+                String dept = String.valueOf(spinner.getSelectedItemPosition());
 
                 //Creating parameters
                 Map<String,String> params = new Hashtable<String, String>();
 
                 //Adding parameters
                 params.put("image", image);
-                params.put("dept", dept);
-                params.put("loc", loc);
+                params.put("dep", dept);
+
+                String[] output = loc.split("\\,");
+                params.put("lat", output[0]);
+                params.put("lng", output[1]);
+                params.put("description", "testing");
+
+               // Toast.makeText(MainActivity.this, output[0]+" "+output[1]+" "+dept, Toast.LENGTH_SHORT).show();
 
                 //returning parameters
                 return params;
