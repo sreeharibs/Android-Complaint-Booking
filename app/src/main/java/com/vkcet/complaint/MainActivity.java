@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     Button btnSubmit;
     EditText etDesc;
 
-    private String UPLOAD_URL ="http://acms.22web.org/upload.php";
+    private String UPLOAD_URL ="http://acms.xenia17.com/upload.php";
 
     private String KEY_IMAGE = "image";
     private String KEY_NAME = "name";
@@ -329,7 +329,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         loading.dismiss();
 
                         //Showing toast
-                        Toast.makeText(MainActivity.this, volleyError.getMessage().toString(), Toast.LENGTH_LONG).show();
+                       // Toast.makeText(MainActivity.this, volleyError.getMessage().toString(), Toast.LENGTH_LONG).show();
                     }
                 }){
             @Override
@@ -361,7 +361,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 String[] output = loc.split("\\,");
                 params.put("lat", output[0]);
                 params.put("lng", output[1]);
-                params.put("description", "testing");
+
 
                // Toast.makeText(MainActivity.this, output[0]+" "+output[1]+" "+dept, Toast.LENGTH_SHORT).show();
 
