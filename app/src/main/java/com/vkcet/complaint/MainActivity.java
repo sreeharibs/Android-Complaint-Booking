@@ -30,6 +30,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     TextView tvLocation;
     Spinner spinner;
     Button btnSubmit;
+    EditText etDesc;
 
     private String UPLOAD_URL ="http://acms.22web.org/upload.php";
 
@@ -104,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         setSupportActionBar(toolbar);
 
         mImageView = (ImageView) findViewById(R.id.mImageView);
+        etDesc = (EditText) findViewById(R.id.etDescription);
         btnSubmit = (Button) findViewById(R.id.btnSubmit);
 
         btnSubmit.setOnClickListener(this);
@@ -345,6 +348,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 //Getting Image Name
                 String loc = (String) tvLocation.getText();
                 String dept = String.valueOf(spinner.getSelectedItemPosition());
+                String desc = String.valueOf(etDesc.getText());
 
                 //Creating parameters
                 Map<String,String> params = new Hashtable<String, String>();
@@ -352,6 +356,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 //Adding parameters
                 params.put("image", image);
                 params.put("dep", dept);
+                params.put("description",desc);
 
                 String[] output = loc.split("\\,");
                 params.put("lat", output[0]);
