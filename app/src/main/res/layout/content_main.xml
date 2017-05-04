@@ -21,7 +21,7 @@
 
         <ImageView
             android:layout_width="match_parent"
-            app:srcCompat="?android:attr/listChoiceIndicatorMultiple"
+            app:srcCompat="@drawable/screen"
             android:id="@+id/mImageView"
             android:layout_height="309dp" />
 
